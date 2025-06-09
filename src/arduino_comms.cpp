@@ -35,6 +35,23 @@ void ArduinoComms::readEncoderValues(int &val_1, int &val_2)
     val_2 = std::atoi(token_2.c_str());
 }
 
+void ArduinoComms::readIMUValues(double (&val_1)[3], double (&val_2)[3], double (&val_3)[4])
+{
+    std::string response = sendMsg("g\r");
+
+    std::istringstream stream(response);
+
+    // Read all values properly with correct indexing
+    stream >> val_1[0] >> val_1[1] >> val_1[2]
+           >> val_2[0] >> val_2[1] >> val_2[2]
+           >> val_3[0] >> val_3[1] >> val_3[2] >> val_3[3];
+
+    // Print values
+    std::cout << "val_1: [" << val_1[0] << ", " << val_1[1] << ", " << val_1[2] << "]\n";
+    std::cout << "val_2: [" << val_2[0] << ", " << val_2[1] << ", " << val_2[2] << "]\n";
+    std::cout << "val_3: [" << val_3[0] << ", " << val_3[1] << ", " << val_3[2] << ", " << val_3[3] << "]\n";
+}
+
 void ArduinoComms::setMotorValues(int val_1, int val_2)
 {
     std::stringstream ss;

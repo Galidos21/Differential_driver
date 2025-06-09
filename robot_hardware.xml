@@ -6,4 +6,11 @@
       Hardware Interface for Differential Drive Arduino controller.
     </description>
   </class>
+  <class name="diffdrive_arduino/ImuSensorHardware"
+         type="ImuSensorHardware"
+         base_class_type="hardware_interface::SensorInterface">
+    <description>
+      IMU Sensor Hardware Interface for 
+    </description>
+  </class>
 </library>

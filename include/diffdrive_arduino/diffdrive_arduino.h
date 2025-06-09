@@ -12,13 +12,13 @@
 
 #include "config.h"
 #include "wheel.h"
+#include "imu.h"
 #include "arduino_comms.h"
 
 using hardware_interface::return_type;
 
 class DiffDriveArduino : public hardware_interface::SystemInterface
 {
-
 
 public:
   DiffDriveArduino();
@@ -39,6 +39,7 @@ public:
 
 
 
+
 private:
 
   Config cfg_;
@@ -46,6 +47,8 @@ private:
 
   Wheel l_wheel_;
   Wheel r_wheel_;
+
+  ImuSensor imu_sensor_;
 
   rclcpp::Logger logger_;
 

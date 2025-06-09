@@ -43,6 +43,26 @@ pluginlib_export_plugin_description_file(hardware_interface robot_hardware.xml)
 
 
 
+add_library(imu_sensor_hardware SHARED src/imu_sensor_hardware.cpp src/imu.cpp src/arduino_comms.cpp)
+
+target_include_directories(
+  imu_sensor_hardware
+  PRIVATE
+  include
+)
+ament_target_dependencies(
+  imu_sensor_hardware
+  hardware_interface
+  controller_manager
+  serial
+  rclcpp
+  pluginlib
+)
+
+pluginlib_export_plugin_description_file(hardware_interface robot_hardware.xml)
+
+
+
 add_library(fake_robot SHARED src/fake_robot.cpp src/wheel.cpp)
 set_property(TARGET fake_robot PROPERTY POSITION_INDEPENDENT_CODE ON)
 
@@ -81,6 +101,7 @@ install(
 ament_export_libraries(
   diffdrive_arduino
   fake_robot
+  imu_sensor_hardware
 )
 ament_export_dependencies(
   hardware_interface
