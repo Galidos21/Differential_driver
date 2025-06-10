@@ -39,8 +39,6 @@ ament_target_dependencies(
   pluginlib
 )
 
-pluginlib_export_plugin_description_file(hardware_interface robot_hardware.xml)
-
 
 
 add_library(imu_sensor_hardware SHARED src/imu_sensor_hardware.cpp src/imu.cpp src/arduino_comms.cpp)
