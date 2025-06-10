@@ -1,16 +1,16 @@
 <library path="diffdrive_arduino">
   <class name="diffdrive_arduino/DiffDriveArduino"
-         type="DiffDriveArduino"
+         type="diffdrive_arduino::DiffDriveArduino"
          base_class_type="hardware_interface::SystemInterface">
     <description>
       Hardware Interface for Differential Drive Arduino controller.
     </description>
   </class>
   <class name="diffdrive_arduino/ImuSensorHardware"
-         type="ImuSensorHardware"
+         type="diffdrive_arduino::ImuSensorHardware"
          base_class_type="hardware_interface::SensorInterface">
     <description>
-      IMU Sensor Hardware Interface for 
+      IMU Sensor Hardware Interface for MPU6050
     </description>
   </class>
 </library>

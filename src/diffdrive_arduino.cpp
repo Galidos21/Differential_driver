@@ -3,7 +3,11 @@
 
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 
+namespace diffdrive_arduino
+{
 
+using hardware_interface::CallbackReturn;
+using hardware_interface::return_type;
 
 DiffDriveArduino::DiffDriveArduino()
     : logger_(rclcpp::get_logger("DiffDriveArduino"))
@@ -87,7 +91,7 @@ CallbackReturn DiffDriveArduino::on_deactivate(const rclcpp_lifecycle::State & /
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type DiffDriveArduino::read()
+hardware_interface::return_type DiffDriveArduino::read(const rclcpp::Time & /*time*/, const rclcpp::Duration & period)
 {
 
   // TODO fix chrono duration
@@ -121,7 +125,7 @@ hardware_interface::return_type DiffDriveArduino::read()
   
 }
 
-hardware_interface::return_type DiffDriveArduino::write()
+hardware_interface::return_type DiffDriveArduino::write(const rclcpp::Time & /*time*/, const rclcpp::Duration & period)
 {
 
   if (!arduino_.connected())
@@ -140,11 +144,11 @@ hardware_interface::return_type DiffDriveArduino::write()
   
 }
 
-
+}
 
 #include "pluginlib/class_list_macros.hpp"
 
 PLUGINLIB_EXPORT_CLASS(
-  DiffDriveArduino,
+  diffdrive_arduino::DiffDriveArduino,
   hardware_interface::SystemInterface
 )

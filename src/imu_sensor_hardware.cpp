@@ -1,15 +1,21 @@
-#include "diffdrive_arduino/diffdrive_arduino.h"
+#include "diffdrive_arduino/imu_sensor.h"
 
 
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 
-DiffDriveArduino::ImuSensorHardware()
+namespace diffdrive_arduino
+{
+
+using hardware_interface::CallbackReturn;
+using hardware_interface::return_type;
+
+ImuSensorHardware::ImuSensorHardware()
     : logger_(rclcpp::get_logger("ImuSensorHardware"))
 {}
 
 CallbackReturn ImuSensorHardware::on_init(const hardware_interface::HardwareInfo & info)
 {
-  if (hardware_interface::SystemInterface::on_init(info) != CallbackReturn::SUCCESS)
+  if (hardware_interface::SensorInterface::on_init(info) != CallbackReturn::SUCCESS)
   {
     return CallbackReturn::ERROR;
   }
@@ -18,7 +24,7 @@ CallbackReturn ImuSensorHardware::on_init(const hardware_interface::HardwareInfo
 
   time_ = std::chrono::system_clock::now();
 
-  cfg_.sensor_name = info_.hardware_parameters["imu_sensor_name"];
+  cfg_.imu_sensor_name = info_.hardware_parameters["imu_sensor"];
   cfg_.device = info_.hardware_parameters["device"];
   cfg_.baud_rate = std::stoi(info_.hardware_parameters["baud_rate"]);
   cfg_.timeout = std::stoi(info_.hardware_parameters["timeout"]);
@@ -31,7 +37,7 @@ CallbackReturn ImuSensorHardware::on_init(const hardware_interface::HardwareInfo
   return CallbackReturn::SUCCESS;
 }
 
-std::vector<hardware_interface::StateInterface> DiffDriveArduino::export_state_interfaces()
+std::vector<hardware_interface::StateInterface> ImuSensorHardware::export_state_interfaces()
 {
   // We need to set up a position and a velocity interface for each wheel
 
@@ -40,7 +46,7 @@ std::vector<hardware_interface::StateInterface> DiffDriveArduino::export_state_i
   // Orientation (Quaternion - typically handled separately)
   state_interfaces.emplace_back(hardware_interface::StateInterface(imu_sensor_.name, "orientation.x", &imu_sensor_.quat[0]));
   state_interfaces.emplace_back(hardware_interface::StateInterface(imu_sensor_.name, "orientation.y", &imu_sensor_.quat[1]));
-  state_interfaces.emplace_back(hardware_interface::StateInterface(imu_sensor_.name "orientation.z", &imu_sensor_.quat[2]));
+  state_interfaces.emplace_back(hardware_interface::StateInterface(imu_sensor_.name, "orientation.z", &imu_sensor_.quat[2]));
   state_interfaces.emplace_back(hardware_interface::StateInterface(imu_sensor_.name, "orientation.w", &imu_sensor_.quat[3]));
 
   // Angular Velocity
@@ -56,21 +62,26 @@ std::vector<hardware_interface::StateInterface> DiffDriveArduino::export_state_i
   return state_interfaces;
 }
 
+// std::vector<hardware_interface::CommandInterface> ImuSensorHardware::export_command_interfaces()
+// {
+//     return {};  // IMU usually has no commands
+// }
+
 CallbackReturn ImuSensorHardware::on_activate(const rclcpp_lifecycle::State & /*previous_state*/)
 {
-  RCLCPP_INFO(logger_, "Starting Controller...");
+  RCLCPP_INFO(logger_, "Starting Sensor...");
 
   return CallbackReturn::SUCCESS;
 }
 
 CallbackReturn ImuSensorHardware::on_deactivate(const rclcpp_lifecycle::State & /*previous_state*/)
 {
-  RCLCPP_INFO(logger_, "Stopping Controller...");
+  RCLCPP_INFO(logger_, "Stopping Sensor...");
 
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type ImuSensorHardware::read()
+hardware_interface::return_type ImuSensorHardware::read(const rclcpp::Time & /*time*/, const rclcpp::Duration &)
 {
   if (!arduino_.connected())
   {
@@ -84,10 +95,17 @@ hardware_interface::return_type ImuSensorHardware::read()
   
 }
 
+// hardware_interface::return_type ImuSensorHardware::write(const rclcpp::Time &, const rclcpp::Duration &)
+// {
+//     return hardware_interface::return_type::OK;  // IMU is read-only
+// }
+
+}
+
 #include "pluginlib/class_list_macros.hpp"
 
 PLUGINLIB_EXPORT_CLASS(
-  ImuSensorHardware,
-  hardware_interface::SystemInterface
+  diffdrive_arduino::ImuSensorHardware,
+  hardware_interface::SensorInterface
 )
 

@@ -23,7 +23,13 @@ find_package(pluginlib REQUIRED)
 
 
 
-add_library(diffdrive_arduino SHARED src/diffdrive_arduino.cpp src/wheel.cpp src/arduino_comms.cpp)
+add_library(diffdrive_arduino SHARED
+  src/diffdrive_arduino.cpp
+  src/wheel.cpp
+  src/arduino_comms.cpp
+  src/imu_sensor_hardware.cpp
+  src/imu.cpp
+)
 
 target_include_directories(
   diffdrive_arduino
@@ -32,24 +38,6 @@ target_include_directories(
 )
 ament_target_dependencies(
   diffdrive_arduino
-  hardware_interface
-  controller_manager
-  serial
-  rclcpp
-  pluginlib
-)
-
-
-
-add_library(imu_sensor_hardware SHARED src/imu_sensor_hardware.cpp src/imu.cpp src/arduino_comms.cpp)
-
-target_include_directories(
-  imu_sensor_hardware
-  PRIVATE
-  include
-)
-ament_target_dependencies(
-  imu_sensor_hardware
   hardware_interface
   controller_manager
   serial
@@ -61,29 +49,29 @@ pluginlib_export_plugin_description_file(hardware_interface robot_hardware.xml)
 
 
 
-add_library(fake_robot SHARED src/fake_robot.cpp src/wheel.cpp)
-set_property(TARGET fake_robot PROPERTY POSITION_INDEPENDENT_CODE ON)
+# add_library(fake_robot SHARED src/fake_robot.cpp src/wheel.cpp)
+# set_property(TARGET fake_robot PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-target_include_directories(
-  fake_robot
-  PRIVATE
-  include
-)
-ament_target_dependencies(
-  fake_robot
-  hardware_interface
-  controller_manager
-  rclcpp
-  pluginlib
-)
+# target_include_directories(
+#   fake_robot
+#   PRIVATE
+#   include
+# )
+# ament_target_dependencies(
+#   fake_robot
+#   hardware_interface
+#   controller_manager
+#   rclcpp
+#   pluginlib
+# )
 
-pluginlib_export_plugin_description_file(hardware_interface fake_robot_hardware.xml)
+# pluginlib_export_plugin_description_file(hardware_interface fake_robot_hardware.xml)
 
 
 
 
 install(
-  TARGETS diffdrive_arduino fake_robot
+  TARGETS diffdrive_arduino
   DESTINATION lib
 )
 
@@ -98,8 +86,7 @@ install(
 
 ament_export_libraries(
   diffdrive_arduino
-  fake_robot
-  imu_sensor_hardware
+  #fake_robot
 )
 ament_export_dependencies(
   hardware_interface

@@ -5,7 +5,7 @@
 
 class ImuSensor {
 public:
-    std::string name = "";  // IMU sensor name
+    std::string name = "imu_sensor";  // IMU sensor name
     double accel[3] = {0, 0, 0};   // Accelerometer (X, Y, Z)
     double gyro[3] = {0, 0, 0};    // Gyroscope (X, Y, Z)
     double quat[4] = {0, 0, 0, 0}; // Quaternion (w, x, y, z)
