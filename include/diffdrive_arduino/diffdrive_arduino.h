@@ -12,7 +12,6 @@
 
 #include "config.h"
 #include "wheel.h"
-#include "imu.h"
 #include "arduino_comms.h"
 
 using hardware_interface::return_type;
@@ -58,3 +57,4 @@ private:
 
 
 #endif // DIFFDRIVE_ARDUINO_REAL_ROBOT_H
+
